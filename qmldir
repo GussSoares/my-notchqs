@@ -1,0 +1,2 @@
+# qmldir
+singleton VolumeController 1.0 services/VolumeController.qml

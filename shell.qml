@@ -40,23 +40,23 @@ Scope {
             color: "transparent"
 
             // Cápsula central do Notch
-            NotchCapsule {
+            // NotchCapsule {
+            //     id: notch
+            //     anchors.top: parent.top
+            //     anchors.topMargin: 10
+            //     anchors.horizontalCenter: parent.horizontalCenter
+
+            //     isExpanded: root.isExpanded
+            //     onToggleExpanded: root.isExpanded = !root.isExpanded
+            //     onSetExpanded: (val) => root.isExpanded = val
+            // }
+
+            Notch {
                 id: notch
                 anchors.top: parent.top
                 anchors.topMargin: 10
                 anchors.horizontalCenter: parent.horizontalCenter
-
-                isExpanded: root.isExpanded
-                onToggleExpanded: root.isExpanded = !root.isExpanded
-                onSetExpanded: (val) => root.isExpanded = val
             }
-
-            // Stacked {
-            //     id: notch
-            //     anchors.topMargin: 10
-            //     anchors.top: parent.top
-            //     anchors.horizontalCenter: parent.horizontalCenter
-            // }
         }
     }
 }
