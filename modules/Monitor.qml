@@ -10,6 +10,10 @@ RowLayout {
     // Propriedades expostas que guardam as porcentagens calculadas
     property int cpuUsage: 0
     property int ramUsage: 0
+    property string cpuColor: ''
+    property string ramColor: ''
+
+    property int timerInterval: 3000
 
     // Variáveis internas para cálculo do delta da CPU
     property real lastTotalTime: 0
@@ -29,7 +33,7 @@ RowLayout {
 
     // Timer responsável pela atualização contínua (ex: a cada 2 segundos)
     Timer {
-        interval: 2000
+        interval: root.timerInterval
         running: true
         repeat: true
         triggeredOnStart: true
@@ -42,6 +46,7 @@ RowLayout {
 
     // --- LÓGICA DA MEMÓRIA RAM ---
     function updateRam() {
+        memInfoFile.reload()
         let text = memInfoFile.text()
         if (!text) return
 
@@ -61,11 +66,13 @@ RowLayout {
         if (memTotal > 0) {
             let used = memTotal - memAvailable
             root.ramUsage = Math.round((used / memTotal) * 100)
+            root.ramColor = root.getColor(root.ramUsage)
         }
     }
 
     // --- LÓGICA DA CPU ---
     function updateCpu() {
+        cpuStatFile.reload()
         let text = cpuStatFile.text()
         if (!text) return
 
@@ -84,10 +91,18 @@ RowLayout {
         if (totalDelta > 0) {
             let cpu = Math.round(((totalDelta - idleDelta) / totalDelta) * 100)
             root.cpuUsage = Math.min(100, Math.max(0, cpu))
+            root.cpuColor = root.getColor(root.cpuUsage)
         }
 
         root.lastTotalTime = total
         root.lastIdleTime = idle
+    }
+
+    function getColor(value) {
+        if (value < 40) return "#a6da95"
+        else if (value >= 40 && value <= 60) return "#8aadf4"
+        else if (value > 60) return "#ed8796"
+        return "#a6da95"
     }
 
     // --- INTERFACE VISUAL DO MÓDULO ---
@@ -98,7 +113,7 @@ RowLayout {
 
         Text {
             text: " "
-            color: "#7aa2f7"
+            color: root.cpuColor
             font.pixelSize: 12
         }
 
@@ -130,7 +145,7 @@ RowLayout {
                 else if (root.ramUsage > 60) return "󰓅 "
                 return "󰾆 "
             }
-            color: "#bb9af7"
+            color: root.ramColor
             font.pixelSize: 12
         }
 

@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Io
+import "../modules"
 
 ColumnLayout {
     id: root
@@ -15,6 +16,11 @@ ColumnLayout {
 
     Behavior on opacity {
         NumberAnimation { duration: 200 }
+    }
+
+    Volume {
+        Layout.alignment: Qt.AlignVCenter
+        Layout.preferredWidth: 180
     }
 
     // Divisor visual

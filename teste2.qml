@@ -50,6 +50,13 @@ Scope {
                 onToggleExpanded: root.isExpanded = !root.isExpanded
                 onSetExpanded: (val) => root.isExpanded = val
             }
+
+            // Stacked {
+            //     id: notch
+            //     anchors.topMargin: 10
+            //     anchors.top: parent.top
+            //     anchors.horizontalCenter: parent.horizontalCenter
+            // }
         }
     }
 }

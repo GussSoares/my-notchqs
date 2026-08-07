@@ -51,11 +51,13 @@ RowLayout {
     }
 
     // 3. Direita: Relógio Simples
-    Text {
-        text: Qt.formatDateTime(new Date(), "hh:mm")
-        color: "#7dcfff"
-        font.pixelSize: 13
-        font.bold: true
-        Layout.alignment: Qt.AlignVCenter
-    }
+    // Text {
+    //     text: Qt.formatDateTime(new Date(), "hh:mm")
+    //     color: "#7dcfff"
+    //     font.pixelSize: 13
+    //     font.bold: true
+    //     Layout.alignment: Qt.AlignVCenter
+    // }
+
+    Clock {}
 }
