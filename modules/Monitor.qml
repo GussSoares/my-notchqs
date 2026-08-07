@@ -107,6 +107,18 @@ RowLayout {
 
     // --- INTERFACE VISUAL DO MÓDULO ---
 
+    MouseArea {
+        id: btnTermArea
+        anchors.fill: parent
+        hoverEnabled: true
+
+        Process {
+            id: launchKitty
+            command: ["kitty", "--class", "btop-floating", "-e", "btop"]
+        }
+        onClicked: launchKitty.running = true
+    }
+
     // Item da CPU
     RowLayout {
         spacing: 4
