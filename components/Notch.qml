@@ -8,7 +8,8 @@ import "../services"
 Rectangle {
     id: notch
 
-    property string activeView: "clock"
+    property string activeView: "default"
+    signal setExpanded(bool value)
 
     width: (mainLoader.item ? mainLoader.item.implicitWidth : 0) + 24
     height: 36
@@ -21,6 +22,17 @@ Rectangle {
             easing.type: Easing.OutCubic
         }
     }
+
+    // HoverHandler {
+    //     id: hoverHandler
+    //     onHoveredChanged: {
+    //         if (hovered) {
+    //             notch.activeView = "monitor"
+    //         } else {
+    //             notch.activeView = "default"
+    //         }
+    //     }
+    // }
 
     Timer {
         id: restoreTimer
@@ -38,15 +50,46 @@ Rectangle {
         }
     }
 
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        onWheel: (wheel) => {
+            if (wheel.angleDelta.y > 0) {
+                notch.activeView = "monitor"
+            } else if (wheel.angleDelta.y < 0) {
+                notch.activeView = "clock"
+            }
+        }
+    }
+
     Loader {
         id: mainLoader
         anchors.centerIn: parent
-        sourceComponent: notch.activeView === "volume" ? volumeComponent : clockComponent
+        // sourceComponent: notch.activeView === "volume" ? volumeComponent : monitorComponent
+        sourceComponent: {
+            switch (notch.activeView) {
+                case "volume": return volumeComponent;
+                case "clock": return clockComponent;
+                case "monitor": return monitorComponent;
+                default: return clockComponent;
+            }
+        }
     }
 
-    // Componente do Relógio
+    // Componente do Clock
     Component {
         id: clockComponent
+
+        Clock {
+            opacity: 0
+            Behavior on opacity { NumberAnimation { duration: 200 } }
+            Component.onCompleted: opacity = 1
+        }
+    }
+
+    // Componente do Monitor
+    Component {
+        id: monitorComponent
 
         Monitor {
             opacity: 0

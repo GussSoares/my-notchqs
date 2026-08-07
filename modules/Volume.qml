@@ -10,15 +10,13 @@ RowLayout {
     id: root
     spacing: 8
 
-    // Nó do Pipewire para a saída de áudio padrão
     property var sink: Pipewire.defaultAudioSink
 
-    // IMPORTANTE: Registrar o sink no PwObjectTracker ativa as propriedades de volume/mute
     PwObjectTracker {
+        // active volume and mute properties
         objects: [root.sink]
     }
 
-    // Processo utilitário para alterar o volume no sistema via wpctl
     Process {
         id: wpctlProcess
     }
@@ -27,6 +25,23 @@ RowLayout {
         // Envia o valor (de 0.0 a 1.0) para o Pipewire via wpctl
         wpctlProcess.command = ["wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", val.toFixed(2)]
         wpctlProcess.running = true
+    }
+
+    function getVolumeColor() {
+        if (root.sink && root.sink.audio && root.sink.audio.muted) {
+            // muted
+            return "#565f89"
+        } else if (Math.round(root.sink.audio.volume * 100) > 100) {
+            // volume > 100
+            return "#ed8796"
+        } else {
+            // volume > 0 and volume < 100
+            return "#7aa2f7"
+        }
+    }
+
+    function getVolumePercentage() {
+        return Math.round(root.sink.audio.volume * 100)
     }
 
     Layout.preferredWidth: 200
@@ -71,26 +86,46 @@ RowLayout {
             height: implicitHeight
             radius: 2
             color: "#414868"
-        }
+            clip: true
 
-        handle: Rectangle {
-            x: volumeSlider.leftPadding + volumeSlider.visualPosition * (volumeSlider.availableWidth - width)
-            y: volumeSlider.topPadding + volumeSlider.availableHeight / 2 - height / 2
-            implicitWidth: 10
-            implicitHeight: 10
-            radius: 5
-            color: volumeSlider.pressed ? "#7aa2f7" : "#bb9af7"
+            Rectangle {
+                width: volumeSlider.visualPosition * parent.width
+                height: parent.height
+                radius: parent.radius
+                color: root.getVolumeColor()
 
-            Behavior on x {
-                enabled: !volumeSlider.pressed
-                NumberAnimation { duration: 100 }
+                // Animação suave para quando o volume for alterado por atalhos de teclado
+                Behavior on width {
+                    enabled: !volumeSlider.pressed // Desativa animação enquanto arrasta para não dar lag
+                    NumberAnimation { duration: 100 }
+                }
             }
+
         }
+
+        handle: Item {
+            implicitWidth: 0
+            implicitHeight: 0
+        }
+
+        // handle: Rectangle {
+        //     x: volumeSlider.leftPadding + volumeSlider.visualPosition * (volumeSlider.availableWidth - width)
+        //     y: volumeSlider.topPadding + volumeSlider.availableHeight / 2 - height / 2
+        //     implicitWidth: 10
+        //     implicitHeight: 10
+        //     radius: 5
+        //     color: volumeSlider.pressed ? "#7aa2f7" : "#bb9af7"
+
+        //     Behavior on x {
+        //         enabled: !volumeSlider.pressed
+        //         NumberAnimation { duration: 100 }
+        //     }
+        // }
     }
 
     // --- TEXTO DA PORCENTAGEM ---
     Text {
-        text: (root.sink && root.sink.audio) ? Math.round(root.sink.audio.volume * 100) + "%" : "0%"
+        text: (root.sink && root.sink.audio) ? root.getVolumePercentage() + "%" : "0%"
         color: "#c0caf5"
         font.pixelSize: 11
         font.bold: true

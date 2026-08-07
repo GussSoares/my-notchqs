@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
+import "../services"
 
 RowLayout {
     id: root
@@ -108,15 +109,9 @@ RowLayout {
     // --- INTERFACE VISUAL DO MÓDULO ---
 
     MouseArea {
-        id: btnTermArea
         anchors.fill: parent
         hoverEnabled: true
-
-        Process {
-            id: launchKitty
-            command: ["kitty", "--class", "btop-floating", "-e", "btop"]
-        }
-        onClicked: launchKitty.running = true
+        onClicked: MonitorController.openBtop()
     }
 
     // Item da CPU

@@ -12,13 +12,11 @@ Text {
 
     Timer {
         id: clockTimer
-        
-        // Propriedade com a data/hora atual que é atualizada a cada segundo
-        property var now: new Date()
-
-        interval: 1000 // Dispara a cada 1 segundo (1000 ms)
+        interval: 1000
         running: true
         repeat: true
+        
+        property var now: new Date()
 
         onTriggered: clockTimer.now = new Date()
     }

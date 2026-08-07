@@ -1,2 +1,3 @@
 # qmldir
 singleton VolumeController 1.0 services/VolumeController.qml
+singleton MonitorController 1.0 services/MonitorController.qml
