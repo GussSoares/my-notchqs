@@ -54,11 +54,6 @@ Rectangle {
         target: BrightnessController
 
         function onBrightnessChanged(value) {
-            // if (notch.Component.isCompleted) {
-            //     notch.activeView = "brightness"
-            //     restoreTimer.restart()
-            // }
-            console.log('brilho')
             notch.activeView = "brightness"
             restoreTimer.restart()
         }
