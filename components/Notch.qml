@@ -50,6 +50,20 @@ Rectangle {
         }
     }
 
+    Connections {
+        target: BrightnessController
+
+        function onBrightnessChanged(value) {
+            // if (notch.Component.isCompleted) {
+            //     notch.activeView = "brightness"
+            //     restoreTimer.restart()
+            // }
+            console.log('brilho')
+            notch.activeView = "brightness"
+            restoreTimer.restart()
+        }
+    }
+
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
@@ -71,6 +85,7 @@ Rectangle {
                 case "volume": return volumeComponent;
                 case "clock": return clockComponent;
                 case "monitor": return monitorComponent;
+                case "brightness": return brightnessComponent;
                 default: return clockComponent;
             }
         }
@@ -103,6 +118,17 @@ Rectangle {
         id: volumeComponent
 
         Volume {
+            opacity: 0
+            Behavior on opacity { NumberAnimation { duration: 200 } }
+            Component.onCompleted: opacity = 1
+        }
+    }
+
+    // Componente de Brilho
+    Component {
+        id: brightnessComponent
+
+        Brightness {
             opacity: 0
             Behavior on opacity { NumberAnimation { duration: 200 } }
             Component.onCompleted: opacity = 1

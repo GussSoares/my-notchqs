@@ -7,27 +7,22 @@ RowLayout {
     id: root
     spacing: 12
 
-    // Propriedades expostas que guardam as porcentagens calculadas
     property int cpuUsage: 0
     property int ramUsage: 0
 
-    // Variáveis internas para cálculo do delta da CPU
     property real lastTotalTime: 0
     property real lastIdleTime: 0
 
-    // FileView lê o arquivo /proc/meminfo de forma eficiente
     FileView {
         id: memInfoFile
         path: "/proc/meminfo"
     }
 
-    // FileView lê o arquivo /proc/stat para calcular o uso do processador
     FileView {
         id: cpuStatFile
         path: "/proc/stat"
     }
 
-    // Timer responsável pela atualização contínua (ex: a cada 2 segundos)
     Timer {
         interval: 2000
         running: true

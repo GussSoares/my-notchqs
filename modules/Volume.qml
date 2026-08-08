@@ -5,33 +5,17 @@ import QtQuick.Controls.Basic
 import Quickshell
 import Quickshell.Services.Pipewire
 import Quickshell.Io // Necessário para executar o wpctl
+import "../services"
 
 RowLayout {
     id: root
     spacing: 8
 
-    property var sink: Pipewire.defaultAudioSink
-
-    PwObjectTracker {
-        // active volume and mute properties
-        objects: [root.sink]
-    }
-
-    Process {
-        id: wpctlProcess
-    }
-
-    function setVolume(val) {
-        // Envia o valor (de 0.0 a 1.0) para o Pipewire via wpctl
-        wpctlProcess.command = ["wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", val.toFixed(2)]
-        wpctlProcess.running = true
-    }
-
     function getVolumeColor() {
-        if (root.sink && root.sink.audio && root.sink.audio.muted) {
+        if (VolumeController.sink && VolumeController.sink.audio && VolumeController.sink.audio.muted) {
             // muted
             return "#565f89"
-        } else if (Math.round(root.sink.audio.volume * 100) > 100) {
+        } else if (Math.round(VolumeController.sink.audio.volume * 100) > 100) {
             // volume > 100
             return "#ed8796"
         } else {
@@ -41,7 +25,7 @@ RowLayout {
     }
 
     function getVolumePercentage() {
-        return Math.round(root.sink.audio.volume * 100)
+        return Math.round(VolumeController.sink.audio.volume * 100)
     }
 
     Layout.preferredWidth: 200
@@ -49,14 +33,14 @@ RowLayout {
     // --- ÍCONE DE VOLUME ---
     Text {
         text: {
-            if (!root.sink || !root.sink.audio) return "󰝟"
-            if (root.sink.audio.muted) return "󰝟"
-            let vol = root.sink.audio.volume * 100
+            if (!VolumeController.sink || !VolumeController.sink.audio) return "󰝟"
+            if (VolumeController.sink.audio.muted) return "󰝟"
+            let vol = VolumeController.sink.audio.volume * 100
             if (vol < 33) return "󰕿"
             if (vol < 66) return "󰖀"
             return "󰕾"
         }
-        color: (root.sink && root.sink.audio && root.sink.audio.muted) ? "#f7768e" : "#c0caf5"
+        color: (VolumeController.sink && VolumeController.sink.audio && VolumeController.sink.audio.muted) ? "#f7768e" : "#c0caf5"
         font.pixelSize: 14
     }
 
@@ -70,12 +54,7 @@ RowLayout {
         to: 1.0
 
         // Vincula o valor do slider diretamente ao volume reportado pelo Pipewire
-        value: (root.sink && root.sink.audio) ? root.sink.audio.volume : 0.0
-
-        // Atualiza o volume no sistema ao arrastar a barra
-        onMoved: {
-            root.setVolume(volumeSlider.value)
-        }
+        value: (VolumeController.sink && VolumeController.sink.audio) ? VolumeController.sink.audio.volume : 0.0
 
         background: Rectangle {
             x: volumeSlider.leftPadding
@@ -125,7 +104,7 @@ RowLayout {
 
     // --- TEXTO DA PORCENTAGEM ---
     Text {
-        text: (root.sink && root.sink.audio) ? root.getVolumePercentage() + "%" : "0%"
+        text: (VolumeController.sink && VolumeController.sink.audio) ? root.getVolumePercentage() + "%" : "0%"
         color: "#c0caf5"
         font.pixelSize: 11
         font.bold: true
