@@ -12,8 +12,8 @@ QtObject {
 
     // Propriedades expostas
     readonly property bool hasPlayer: activePlayer !== null
-    readonly property string trackTitle: activePlayer?.trackTitle ?? "Nenhuma mídia"
-    readonly property string trackArtist: activePlayer?.trackArtist ?? "Desconhecido"
+    readonly property string trackTitle: activePlayer?.trackTitle ?? "---"
+    readonly property string trackArtist: activePlayer?.trackArtist ?? "---"
     readonly property string trackAlbum: activePlayer?.trackAlbum ?? ""
     
     // URL da capa da música (Thumb/ArtUrl)

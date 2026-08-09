@@ -11,6 +11,11 @@ Item {
     implicitWidth: mainLayout.implicitWidth
     implicitHeight: 40
 
+    function fixName(value: string, slice=10): string {
+        if (value.length < slice) return value
+        return `${value.slice(0, slice)}...`
+    }
+
     MouseArea {
         anchors.fill: parent
         onClicked: MprisController.togglePlayPause()
@@ -74,7 +79,7 @@ Item {
                 }
 
                 Text {
-                    text: `${MprisController.trackTitle.slice(0, 10)}...`
+                    text: root.fixName(MprisController.trackTitle)
                     color: "#c0caf5"
                     font.pixelSize: 13
                     font.bold: true
@@ -88,7 +93,7 @@ Item {
 
             // Artista
             Text {
-                text: `${MprisController.trackArtist.slice(0, 10)}...`
+                text: root.fixName(MprisController.trackArtist)
                 color: "#a9b1d6"
                 font.pixelSize: 10
                 
