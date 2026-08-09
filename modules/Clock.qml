@@ -4,7 +4,9 @@ import QtQuick.Layouts
 Text {
     id: root
 
-    text: Qt.formatDateTime(clockTimer.now, "hh:mm")
+    property string format: "hh:mm"
+
+    text: Qt.formatDateTime(clockTimer.now, root.format)
     color: "#7dcfff"
     font.pixelSize: 13
     font.bold: true

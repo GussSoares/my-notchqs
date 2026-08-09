@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Services.Pipewire
+import "../components"
 import "../modules"
 import "../services"
 
@@ -12,7 +13,7 @@ Rectangle {
     signal setExpanded(bool value)
 
     width: (mainLoader.item ? mainLoader.item.implicitWidth : 0) + 24
-    height: 36
+    height: (mainLoader.item ? mainLoader.item.implicitHeight : 0) + 13
     radius: 18
     color: "#1a1b26"
 
@@ -63,11 +64,23 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         onWheel: (wheel) => {
-            if (wheel.angleDelta.y > 0) {
+            if (wheel.angleDelta.x < 0) {
                 notch.activeView = "monitor"
+            } else if (wheel.angleDelta.x > 0) {
+                notch.activeView = "clock"
+            } else if (wheel.angleDelta.y > 0) {
+                notch.activeView = "expandedComponent"
+                // restoreTimer.restart()
             } else if (wheel.angleDelta.y < 0) {
                 notch.activeView = "clock"
             }
+        }
+
+        onEntered: {
+            notch.activeView = "expandedComponent"
+        }
+        onExited: {
+            notch.activeView = "clock"
         }
     }
 
@@ -81,6 +94,7 @@ Rectangle {
                 case "clock": return clockComponent;
                 case "monitor": return monitorComponent;
                 case "brightness": return brightnessComponent;
+                case "expandedComponent": return expandedComponent
                 default: return clockComponent;
             }
         }
@@ -90,10 +104,29 @@ Rectangle {
     Component {
         id: clockComponent
 
-        Clock {
-            opacity: 0
-            Behavior on opacity { NumberAnimation { duration: 200 } }
-            Component.onCompleted: opacity = 1
+        RowLayout {
+            spacing: 12
+
+            MiniCava {}
+
+            Battery {
+                opacity: 0
+                Behavior on opacity { NumberAnimation { duration: 200 } }
+                Component.onCompleted: opacity = 1
+            }
+
+            Clock {
+                opacity: 0
+                Behavior on opacity { NumberAnimation { duration: 200 } }
+                Component.onCompleted: opacity = 1
+            }
+
+            VolumeIndicator {
+                opacity: 0
+                Behavior on opacity { NumberAnimation { duration: 200 } }
+                Component.onCompleted: opacity = 1
+            }
+
         }
     }
 
@@ -124,6 +157,16 @@ Rectangle {
         id: brightnessComponent
 
         Brightness {
+            opacity: 0
+            Behavior on opacity { NumberAnimation { duration: 200 } }
+            Component.onCompleted: opacity = 1
+        }
+    }
+
+    Component {
+        id: expandedComponent
+
+        NotchExpanded {
             opacity: 0
             Behavior on opacity { NumberAnimation { duration: 200 } }
             Component.onCompleted: opacity = 1

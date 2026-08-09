@@ -36,7 +36,7 @@ Scope {
                 right: true
             }
 
-            implicitHeight: 200
+            implicitHeight: 400
             color: "transparent"
 
             // Cápsula central do Notch

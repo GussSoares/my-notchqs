@@ -4,100 +4,10 @@ import Quickshell
 import Quickshell.Io
 import "../services"
 
-RowLayout {
+Item {
     id: root
-    spacing: 12
-
-    // Propriedades expostas que guardam as porcentagens calculadas
-    property int cpuUsage: 0
-    property int ramUsage: 0
-    property string cpuColor: ''
-    property string ramColor: ''
-
-    property int timerInterval: 3000
-
-    // Variáveis internas para cálculo do delta da CPU
-    property real lastTotalTime: 0
-    property real lastIdleTime: 0
-
-    // FileView lê o arquivo /proc/meminfo de forma eficiente
-    FileView {
-        id: memInfoFile
-        path: "/proc/meminfo"
-    }
-
-    // FileView lê o arquivo /proc/stat para calcular o uso do processador
-    FileView {
-        id: cpuStatFile
-        path: "/proc/stat"
-    }
-
-    // Timer responsável pela atualização contínua (ex: a cada 2 segundos)
-    Timer {
-        interval: root.timerInterval
-        running: true
-        repeat: true
-        triggeredOnStart: true
-
-        onTriggered: {
-            root.updateRam()
-            root.updateCpu()
-        }
-    }
-
-    // --- LÓGICA DA MEMÓRIA RAM ---
-    function updateRam() {
-        memInfoFile.reload()
-        let text = memInfoFile.text()
-        if (!text) return
-
-        let memTotal = 0
-        let memAvailable = 0
-
-        // Processa cada linha de /proc/meminfo
-        let lines = text.split("\n")
-        for (let line of lines) {
-            if (line.startsWith("MemTotal:")) {
-                memTotal = parseInt(line.replace(/[^0-9]/g, ''))
-            } else if (line.startsWith("MemAvailable:")) {
-                memAvailable = parseInt(line.replace(/[^0-9]/g, ''))
-            }
-        }
-
-        if (memTotal > 0) {
-            let used = memTotal - memAvailable
-            root.ramUsage = Math.round((used / memTotal) * 100)
-            root.ramColor = root.getColor(root.ramUsage)
-        }
-    }
-
-    // --- LÓGICA DA CPU ---
-    function updateCpu() {
-        cpuStatFile.reload()
-        let text = cpuStatFile.text()
-        if (!text) return
-
-        let firstLine = text.split("\n")[0] // Pega a linha principal "cpu  ..."
-        let times = firstLine.trim().split(/\s+/).slice(1).map(Number)
-
-        if (times.length < 4) return
-
-        // Soma dos tempos do processador
-        let idle = times[3] + times[4] // idle + iowait
-        let total = times.reduce((a, b) => a + b, 0)
-
-        let totalDelta = total - root.lastTotalTime
-        let idleDelta = idle - root.lastIdleTime
-
-        if (totalDelta > 0) {
-            let cpu = Math.round(((totalDelta - idleDelta) / totalDelta) * 100)
-            root.cpuUsage = Math.min(100, Math.max(0, cpu))
-            root.cpuColor = root.getColor(root.cpuUsage)
-        }
-
-        root.lastTotalTime = total
-        root.lastIdleTime = idle
-    }
+    implicitWidth: mainLayout.implicitWidth
+    implicitHeight: mainLayout.implicitHeight
 
     function getColor(value) {
         if (value < 40) return "#a6da95"
@@ -106,27 +16,31 @@ RowLayout {
         return "#a6da95"
     }
 
-    // --- INTERFACE VISUAL DO MÓDULO ---
-
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
         onClicked: MonitorController.openBtop()
     }
 
-    // Item da CPU
+    RowLayout {
+    id: mainLayout
+    anchors.fill: parent
+    spacing: 12
+
+    
+
     RowLayout {
         spacing: 4
 
         Text {
             text: " "
-            color: root.cpuColor
-            font.pixelSize: 12
+            color: root.getColor(MonitorController.cpuUsage)
+            font.pixelSize: 16
         }
 
         Text {
-            text: "CPU " + root.cpuUsage + "%"
-            color: root.cpuUsage > 80 ? "#f7768e" : "#c0caf5"
+            text: "CPU " + MonitorController.cpuUsage + "%"
+            color: MonitorController.cpuUsage > 80 ? "#f7768e" : "#c0caf5"
             font.pixelSize: 12
             font.bold: true
 
@@ -134,7 +48,6 @@ RowLayout {
         }
     }
 
-    // Separador
     Text {
         text: "|"
         color: "#565f89"
@@ -147,18 +60,19 @@ RowLayout {
 
         Text {
             text: {
-                if (root.ramUsage < 40) return "󰾆 "
-                else if (root.ramUsage >= 40 && root.ramUsage <= 60) return "󰾅 "
-                else if (root.ramUsage > 60) return "󰓅 "
+                if (MonitorController.ramUsage < 40) return "󰾆 "
+                else if (MonitorController.ramUsage >= 40 && MonitorController.ramUsage <= 60) return "󰾅 "
+                else if (MonitorController.ramUsage > 60) return "󰓅 "
                 return "󰾆 "
+        // anchors.fill: parent
             }
-            color: root.ramColor
-            font.pixelSize: 12
+            color: root.getColor(MonitorController.ramUsage)
+            font.pixelSize: 16
         }
 
         Text {
-            text: "RAM " + root.ramUsage + "%"
-            color: root.ramUsage > 85 ? "#f7768e" : "#c0caf5"
+            text: "RAM " + MonitorController.ramUsage + "%"
+            color: MonitorController.ramUsage > 85 ? "#f7768e" : "#c0caf5"
             font.pixelSize: 12
             font.bold: true
 
@@ -166,3 +80,6 @@ RowLayout {
         }
     }
 }
+
+}
+

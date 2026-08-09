@@ -2,3 +2,5 @@
 singleton VolumeController 1.0 services/VolumeController.qml
 singleton MonitorController 1.0 services/MonitorController.qml
 singleton BrightnessController 1.0 services/BrightnessController.qml
+singleton BatteryController 1.0 services/BatteryController.qml
+singleton MprisController 1.0 services/MprisController.qml

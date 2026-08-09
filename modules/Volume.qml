@@ -33,12 +33,13 @@ RowLayout {
     // --- ÍCONE DE VOLUME ---
     Text {
         text: {
-            if (!VolumeController.sink || !VolumeController.sink.audio) return "󰝟"
-            if (VolumeController.sink.audio.muted) return "󰝟"
+            if (!VolumeController.sink || !VolumeController.sink.audio) return " "
+            if (VolumeController.sink.audio.muted) return " "
             let vol = VolumeController.sink.audio.volume * 100
-            if (vol < 33) return "󰕿"
-            if (vol < 66) return "󰖀"
-            return "󰕾"
+            if (vol === 0) return " "
+            if (vol < 33) return " "
+            if (vol < 66) return " "
+            return "  "
         }
         color: (VolumeController.sink && VolumeController.sink.audio && VolumeController.sink.audio.muted) ? "#f7768e" : "#c0caf5"
         font.pixelSize: 14
