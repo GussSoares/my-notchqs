@@ -12,10 +12,10 @@ RowLayout {
     spacing: 8
 
     function getVolumeColor() {
-        if (VolumeController.sink && VolumeController.sink.audio && VolumeController.sink.audio.muted) {
+        if (VolumeController.lastAudioMuted) {
             // muted
             return "#565f89"
-        } else if (Math.round(VolumeController.sink.audio.volume * 100) > 100) {
+        } else if (Math.round(VolumeController.lastAudioVolume * 100) > 100) {
             // volume > 100
             return "#ed8796"
         } else {
@@ -25,7 +25,7 @@ RowLayout {
     }
 
     function getVolumePercentage() {
-        return Math.round(VolumeController.sink.audio.volume * 100)
+        return Math.round(VolumeController.lastAudioVolume * 100)
     }
 
     Layout.preferredWidth: 200
@@ -33,15 +33,15 @@ RowLayout {
     // --- ÍCONE DE VOLUME ---
     Text {
         text: {
-            if (!VolumeController.sink || !VolumeController.sink.audio) return " "
-            if (VolumeController.sink.audio.muted) return " "
-            let vol = VolumeController.sink.audio.volume * 100
+            // if (!VolumeController.sink || !VolumeController.sink.audio) return " "
+            if (VolumeController.lastAudioMuted) return " "
+            let vol = VolumeController.lastAudioVolume * 100
             if (vol === 0) return " "
             if (vol < 33) return " "
             if (vol < 66) return " "
             return "  "
         }
-        color: (VolumeController.sink && VolumeController.sink.audio && VolumeController.sink.audio.muted) ? "#f7768e" : "#c0caf5"
+        color: (VolumeController.lastAudioMuted) ? "#f7768e" : "#c0caf5"
         font.pixelSize: 14
     }
 
@@ -55,7 +55,7 @@ RowLayout {
         to: 1.0
 
         // Vincula o valor do slider diretamente ao volume reportado pelo Pipewire
-        value: (VolumeController.sink && VolumeController.sink.audio) ? VolumeController.sink.audio.volume : 0.0
+        value: VolumeController.lastAudioVolume || 0.0
 
         background: Rectangle {
             x: volumeSlider.leftPadding
@@ -105,7 +105,7 @@ RowLayout {
 
     // --- TEXTO DA PORCENTAGEM ---
     Text {
-        text: (VolumeController.sink && VolumeController.sink.audio) ? root.getVolumePercentage() + "%" : "0%"
+        text: VolumeController.lastAudioVolume ? root.getVolumePercentage() + "%" : "0%"
         color: "#c0caf5"
         font.pixelSize: 11
         font.bold: true

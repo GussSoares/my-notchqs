@@ -45,7 +45,7 @@ Rectangle {
     Connections {
         target: VolumeController
 
-        function onVolumeTriggered() {
+        function onAudioVolumeTriggered() {
             notch.activeView = "volume"
             restoreTimer.restart()
         }
@@ -70,18 +70,17 @@ Rectangle {
                 notch.activeView = "clock"
             } else if (wheel.angleDelta.y > 0) {
                 notch.activeView = "expandedComponent"
-                // restoreTimer.restart()
             } else if (wheel.angleDelta.y < 0) {
                 notch.activeView = "clock"
             }
         }
 
-        onEntered: {
-            notch.activeView = "expandedComponent"
-        }
-        onExited: {
-            notch.activeView = "clock"
-        }
+        // onEntered: {
+        //     notch.activeView = "expandedComponent"
+        // }
+        // onExited: {
+        //     notch.activeView = "clock"
+        // }
     }
 
     Loader {
@@ -115,10 +114,27 @@ Rectangle {
                 Component.onCompleted: opacity = 1
             }
 
-            Clock {
-                opacity: 0
-                Behavior on opacity { NumberAnimation { duration: 200 } }
-                Component.onCompleted: opacity = 1
+            // Clock {
+            //     opacity: 0
+            //     Behavior on opacity { NumberAnimation { duration: 200 } }
+            //     Component.onCompleted: opacity = 1
+            // }
+            SystemClock {
+                id: clock
+                precision: SystemClock.Minutes
+            }
+
+            Text {
+                id: root
+
+                property string format: "hh:mm"
+
+                text: Qt.formatDateTime(clock.date, root.format)
+                color: "#7dcfff"
+                font.pixelSize: 13
+                font.bold: true
+                Layout.alignment: Qt.AlignVCenter
+
             }
 
             VolumeIndicator {
@@ -127,6 +143,11 @@ Rectangle {
                 Component.onCompleted: opacity = 1
             }
 
+            MicIndicator {
+                opacity: 0
+                Behavior on opacity { NumberAnimation { duration: 200 } }
+                Component.onCompleted: opacity = 1
+            }
         }
     }
 

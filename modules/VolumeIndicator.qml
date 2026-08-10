@@ -4,32 +4,48 @@ import QtQuick.Layouts
 import Quickshell
 import "../services"
 
-RowLayout {
+Item {
     id: root
-    spacing: 8
+    implicitWidth: mainLayout.implicitWidth
+    implicitHeight: mainLayout.implicitHeight
 
-    // Ícone dinâmico usando ícones NerdFonts
-    Text {
-        text: {
-            let p = VolumeController.lastVolume * 100
-            if (p == 0) return " "
-            if (p <= 25) return " "
-            if (p <= 50) return " "
-            if (p <= 75) return " "
-            if (p <= 100) return " "
-            return " "
-        }
-        color: {
-            return VolumeController.lastMuted ? "#f7768e" : "#c0caf5"
-        }
-        font.pixelSize: 16
+    MouseArea {
+        anchors.fill: parent
+        onClicked: VolumeController.openWireMixOutput()
     }
 
-    // Texto da porcentagem
-    Text {
-        text: Math.round(VolumeController.lastVolume * 100) + "%"
-        color: "#c0caf5"
-        font.pixelSize: 12
-        font.bold: true
+    RowLayout {
+        id: mainLayout
+        spacing: 8
+
+        // Ícone dinâmico usando ícones NerdFonts
+        Text {
+            text: {
+                let p = VolumeController.lastAudioVolume * 100;
+                if (p == 0)
+                    return " ";
+                if (p <= 25)
+                    return " ";
+                if (p <= 50)
+                    return " ";
+                if (p <= 75)
+                    return " ";
+                if (p <= 100)
+                    return " ";
+                return " ";
+            }
+            color: {
+                return VolumeController.lastAudioMuted ? "#f7768e" : "#c0caf5";
+            }
+            font.pixelSize: 16
+        }
+
+        // Texto da porcentagem
+        Text {
+            text: Math.round(VolumeController.lastAudioVolume * 100) + "%"
+            color: "#c0caf5"
+            font.pixelSize: 12
+            font.bold: true
+        }
     }
 }
