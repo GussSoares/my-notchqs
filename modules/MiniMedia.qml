@@ -7,14 +7,8 @@ import "../services"
 Item {
     id: root
 
-    // Define o tamanho implícito para o Notch saber como dimensioná-lo
     implicitWidth: mainLayout.implicitWidth
     implicitHeight: 40
-
-    function fixName(value: string, slice=10): string {
-        if (value.length < slice) return value
-        return `${value.slice(0, slice)}...`
-    }
 
     MouseArea {
         anchors.fill: parent
@@ -26,7 +20,6 @@ Item {
         anchors.fill: parent
         spacing: 10
 
-        // 1. Imagem de Capa com Cantos Arredondados
         Image {
             id: albumArt
             source: MprisController.artUrl
@@ -34,7 +27,7 @@ Item {
             asynchronous: true
             
             Layout.preferredHeight: 40
-            Layout.preferredWidth: 40 // Mantido quadrado para não distorcer
+            Layout.preferredWidth: 40
             Layout.alignment: Qt.AlignVCenter
 
             layer.enabled: true
@@ -79,13 +72,11 @@ Item {
                 }
 
                 Text {
-                    text: root.fixName(MprisController.trackTitle)
+                    text: MprisController.trackTitle
                     color: "#c0caf5"
                     font.pixelSize: 13
                     font.bold: true
                     
-                    // O SEGREDO DO ALINHAMENTO:
-                    // O elide calcula dinamicamente o espaço e coloca '...' se passar do limite
                     Layout.fillWidth: true
                     elide: Text.ElideRight
                 }
@@ -93,7 +84,7 @@ Item {
 
             // Artista
             Text {
-                text: root.fixName(MprisController.trackArtist)
+                text: MprisController.trackArtist
                 color: "#a9b1d6"
                 font.pixelSize: 10
                 

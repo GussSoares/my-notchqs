@@ -23,6 +23,9 @@ QtObject {
     property real lastMicVolume: -1
     property bool lastMicMuted: false
 
+    property real step: 0.05      //   5%
+    property real maxVolume: 1.5  // 150%
+
     signal audioVolumeTriggered()
     signal micVolumeTriggered()
 
@@ -110,5 +113,27 @@ QtObject {
     }
     function openWireMixInput() {
         microphoneControlProcess.running = true
+    }
+    function volumeUp(): void {
+        if (!controller.sink) return
+        
+        let newVol = controller.sink.audio.volume + step
+        controller.sink.audio.volume = Math.min(1.5, newVol)
+    }
+    function volumeDown(): void {
+        if (!controller.sink) return
+        
+        let newVol = controller.sink.audio.volume - step
+        controller.sink.audio.volume = Math.min(1.5, newVol)
+    }
+    function sinkMute(): void {
+        if (!controller.sink) return
+        
+        controller.sink.audio.muted = !controller.lastAudioMuted
+    }
+    function sourceMute(): void {
+        if (!controller.source) return
+        
+        controller.source.audio.muted = !controller.lastMicMuted
     }
 }

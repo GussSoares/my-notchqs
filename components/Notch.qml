@@ -1,21 +1,28 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Effects
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Services.Pipewire
 import "../components"
 import "../modules"
 import "../services"
 
+import "../components/Notch" as Notch
+import "../"
+
 Rectangle {
     id: notch
 
-    property string activeView: "default"
+    property var focusedScreen
+
+    property string activeView: "clock"
     signal setExpanded(bool value)
 
-    width: (mainLoader.item ? mainLoader.item.implicitWidth : 0) + 24
-    height: (mainLoader.item ? mainLoader.item.implicitHeight : 0) + 13
+    width: (mainLoader.item ? mainLoader.item.width : 0)
+    height: (mainLoader.item ? mainLoader.item.height : 0)
     radius: 18
-    color: "#1a1b26"
+    color: Theme.background
 
     Behavior on width {
         NumberAnimation {
@@ -24,17 +31,6 @@ Rectangle {
         }
     }
 
-    // HoverHandler {
-    //     id: hoverHandler
-    //     onHoveredChanged: {
-    //         if (hovered) {
-    //             notch.activeView = "monitor"
-    //         } else {
-    //             notch.activeView = "default"
-    //         }
-    //     }
-    // }
-
     Timer {
         id: restoreTimer
         interval: 2500
@@ -42,60 +38,122 @@ Rectangle {
         onTriggered: notch.activeView = "default"
     }
 
+    Timer {
+        id: notificationTimer
+        interval: 5000
+        repeat: false
+        onTriggered: notch.activeView = "default"
+    }
+
     Connections {
         target: VolumeController
+        enabled: notch.focusedScreen
 
         function onAudioVolumeTriggered() {
-            notch.activeView = "volume"
-            restoreTimer.restart()
+            notch.activeView = "volume";
+            restoreTimer.restart();
         }
     }
 
     Connections {
         target: BrightnessController
+        enabled: notch.focusedScreen
 
         function onBrightnessChanged(value) {
-            notch.activeView = "brightness"
-            restoreTimer.restart()
+            notch.activeView = "brightness";
+            restoreTimer.restart();
         }
     }
 
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        onWheel: (wheel) => {
-            if (wheel.angleDelta.x < 0) {
-                notch.activeView = "monitor"
-            } else if (wheel.angleDelta.x > 0) {
-                notch.activeView = "clock"
-            } else if (wheel.angleDelta.y > 0) {
-                notch.activeView = "expandedComponent"
-            } else if (wheel.angleDelta.y < 0) {
-                notch.activeView = "clock"
+    Connections {
+        target: NotificationController
+        enabled: notch.focusedScreen
+
+        function onNewNotification(value) {
+            notch.activeView = "notification";
+            notificationTimer.restart();
+        }
+    }
+
+    Connections {
+        target: IpcController
+        enabled: notch.focusedScreen
+
+        function onTriggerNotchExpanded(value) {
+            notch.activeView = "controlCenter";
+            restoreTimer.restart();
+        }
+        function onTriggerPowerMenu(value) {
+            notch.activeView = "powerMenu";
+        }
+    }
+
+    Connections {
+        target: MprisController
+        enabled: notch.focusedScreen
+
+        function onIsPlayingChanged() {
+            if (MprisController.isPlaying) {
+                notch.activeView = "musicNotification";
+                restoreTimer.restart();
             }
         }
-
-        // onEntered: {
-        //     notch.activeView = "expandedComponent"
-        // }
-        // onExited: {
-        //     notch.activeView = "clock"
-        // }
     }
 
     Loader {
         id: mainLoader
         anchors.centerIn: parent
-        // sourceComponent: notch.activeView === "volume" ? volumeComponent : monitorComponent
+
+        width: (item ? item.implicitWidth : 0) + 24
+        height: (item ? item.implicitHeight : 0) + 13
+
         sourceComponent: {
             switch (notch.activeView) {
-                case "volume": return volumeComponent;
-                case "clock": return clockComponent;
-                case "monitor": return monitorComponent;
-                case "brightness": return brightnessComponent;
-                case "expandedComponent": return expandedComponent
-                default: return clockComponent;
+            case "clock":
+                return clockComponent;
+            case "volume":
+                return volumeComponent;
+            case "monitor":
+                return monitorComponent;
+            case "brightness":
+                return brightnessComponent;
+            case "notification":
+                return notificationComponent;
+            case "expandedNotch":
+                return expandedComponent;
+            case "powerMenu":
+                return powerMenuComponent;
+            case "musicNotification":
+                return musicNotificationComponent;
+            case "controlCenter":
+                return controlCenterComponent;
+            default:
+                return clockComponent;
             }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            onWheel: wheel => {
+                if (wheel.angleDelta.y > 0) {
+                    notch.activeView = "expandedNotch";
+                } else if (wheel.angleDelta.y < 0) {
+                    notch.activeView = "controlCenter";
+                }
+            }
+
+            onEntered: {
+                notch.activeView = 'expandedNotch'
+            }
+            onExited: {
+                notch.activeView = 'clock'
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: notch.activeView = "controlCenter";
         }
     }
 
@@ -103,51 +161,17 @@ Rectangle {
     Component {
         id: clockComponent
 
-        RowLayout {
-            spacing: 12
+        Notch.MainNotch {
+            additionalPadding: 40
 
-            MiniCava {}
-
-            Battery {
-                opacity: 0
-                Behavior on opacity { NumberAnimation { duration: 200 } }
-                Component.onCompleted: opacity = 1
+            opacity: 0
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutCubic
+                }
             }
-
-            // Clock {
-            //     opacity: 0
-            //     Behavior on opacity { NumberAnimation { duration: 200 } }
-            //     Component.onCompleted: opacity = 1
-            // }
-            SystemClock {
-                id: clock
-                precision: SystemClock.Minutes
-            }
-
-            Text {
-                id: root
-
-                property string format: "hh:mm"
-
-                text: Qt.formatDateTime(clock.date, root.format)
-                color: "#7dcfff"
-                font.pixelSize: 13
-                font.bold: true
-                Layout.alignment: Qt.AlignVCenter
-
-            }
-
-            VolumeIndicator {
-                opacity: 0
-                Behavior on opacity { NumberAnimation { duration: 200 } }
-                Component.onCompleted: opacity = 1
-            }
-
-            MicIndicator {
-                opacity: 0
-                Behavior on opacity { NumberAnimation { duration: 200 } }
-                Component.onCompleted: opacity = 1
-            }
+            Component.onCompleted: opacity = 1
         }
     }
 
@@ -157,7 +181,12 @@ Rectangle {
 
         Monitor {
             opacity: 0
-            Behavior on opacity { NumberAnimation { duration: 200 } }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutCubic
+                }
+            }
             Component.onCompleted: opacity = 1
         }
     }
@@ -168,7 +197,12 @@ Rectangle {
 
         Volume {
             opacity: 0
-            Behavior on opacity { NumberAnimation { duration: 200 } }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutCubic
+                }
+            }
             Component.onCompleted: opacity = 1
         }
     }
@@ -179,7 +213,27 @@ Rectangle {
 
         Brightness {
             opacity: 0
-            Behavior on opacity { NumberAnimation { duration: 200 } }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutCubic
+                }
+            }
+            Component.onCompleted: opacity = 1
+        }
+    }
+
+    Component {
+        id: notificationComponent
+
+        NotificationPopup {
+            opacity: 0
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutCubic
+                }
+            }
             Component.onCompleted: opacity = 1
         }
     }
@@ -189,7 +243,57 @@ Rectangle {
 
         NotchExpanded {
             opacity: 0
-            Behavior on opacity { NumberAnimation { duration: 200 } }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutCubic
+                }
+            }
+            Component.onCompleted: opacity = 1
+        }
+    }
+
+    Component {
+        id: powerMenuComponent
+
+        PowerMenu {
+            opacity: 0
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutCubic
+                }
+            }
+            Component.onCompleted: opacity = 1
+        }
+    }
+
+    Component {
+        id: musicNotificationComponent
+
+        MusicNotification {
+            opacity: 0
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutCubic
+                }
+            }
+            Component.onCompleted: opacity = 1
+        }
+    }
+
+    Component {
+        id: controlCenterComponent
+
+        ControlCenter {
+            opacity: 0
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutCubic
+                }
+            }
             Component.onCompleted: opacity = 1
         }
     }

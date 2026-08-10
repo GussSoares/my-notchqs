@@ -1,44 +1,34 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Io
 import Quickshell.Services.Pipewire
 import "../components/NotchExpanded"
 import "../components"
 import "../modules"
 import "../services"
+import "../"
 
 import Quickshell.Networking
 
 Rectangle {
     id: notch
 
-    property string activeView: "default"
-    signal setExpanded(bool value)
-
     radius: 18
-    color: "#1a1b26"
+    color: Theme.background
 
     implicitWidth: mainLayout.implicitWidth
     implicitHeight: mainLayout.implicitHeight
     
-    // Garante que elementos arredondados/imagens não esbarrem nas bordas
-    clip: true 
+    clip: true
 
     ColumnLayout {
         id: mainLayout
+        anchors.centerIn: parent
         spacing: 8
 
         TopSide {}
 
-        Separator {}
-
-        Text {
-            text: `${NetworkController.ssid}, ${NetworkController.signalStrength}%`
-            color: "#c0caf5"
-            font.pixelSize: 12
-            font.bold: true
-        }
-
-        NetworkIndicator{}
+        Paginator { page: 1 }
     }
 }

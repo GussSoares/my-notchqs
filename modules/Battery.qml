@@ -7,6 +7,7 @@ import "../services"
 RowLayout {
     id: root
     spacing: 8
+    visible: !BatteryController.isUnavailable
 
     // Ícone dinâmico usando ícones NerdFonts
     Text {

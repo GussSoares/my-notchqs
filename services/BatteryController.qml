@@ -12,6 +12,7 @@ QtObject {
 
     // Propriedades expostas (0.0 a 1.0 para manter o mesmo padrão do Brilho e Volume)
     property real chargePercentage: displayDevice ? displayDevice.percentage : 0.0
+    property bool isUnavailable: displayDevice ? displayDevice.state === UPowerDeviceState.Unknown : false
     property bool isCharging: displayDevice ? displayDevice.state === UPowerDeviceState.Charging : false
     property bool isPluggedIn: displayDevice ? (displayDevice.state === UPowerDeviceState.Charging || 
                                                displayDevice.state === UPowerDeviceState.FullyCharged) : false

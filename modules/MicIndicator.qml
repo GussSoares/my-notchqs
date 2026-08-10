@@ -11,12 +11,19 @@ Item {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: VolumeController.openWireMixInput()
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onClicked: (mouse) => {
+            if (mouse.button === Qt.LeftButton) {
+                VolumeController.openWireMixInput()
+            } else if (mouse.button === Qt.RightButton) {
+                VolumeController.sourceMute()
+            }
+        }
     }
 
     RowLayout {
         id: mainLayout
-        spacing: 8
+        spacing: 3
 
         Text {
             text: VolumeController.lastMicMuted ? "" : ""

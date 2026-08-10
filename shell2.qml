@@ -11,13 +11,11 @@ Scope {
         model: Quickshell.screens
 
         delegate: PanelWindow {
-            required property var modelData
-            screen: modelData
             WlrLayershell.layer: WlrLayer.Top
             WlrLayershell.exclusiveZone: 40
 
             mask: Region {
-                item: notch
+                item: notch.activeView !== "clock" ? notch.outsideArea : notch
             }
 
             anchors {

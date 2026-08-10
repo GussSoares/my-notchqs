@@ -11,28 +11,35 @@ Item {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: VolumeController.openWireMixOutput()
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onClicked: (mouse) => {
+            if (mouse.button === Qt.LeftButton) {
+                VolumeController.openWireMixOutput()
+            } else if (mouse.button === Qt.RightButton) {
+                VolumeController.sinkMute()
+            }
+        }
     }
 
     RowLayout {
         id: mainLayout
-        spacing: 8
+        spacing: 5
 
         // Ícone dinâmico usando ícones NerdFonts
         Text {
             text: {
                 let p = VolumeController.lastAudioVolume * 100;
-                if (p == 0)
-                    return " ";
+                if (p == 0 || VolumeController.lastAudioMuted)
+                    return "";
                 if (p <= 25)
-                    return " ";
+                    return "";
                 if (p <= 50)
-                    return " ";
+                    return "";
                 if (p <= 75)
-                    return " ";
+                    return "";
                 if (p <= 100)
-                    return " ";
-                return " ";
+                    return "";
+                return "";
             }
             color: {
                 return VolumeController.lastAudioMuted ? "#f7768e" : "#c0caf5";

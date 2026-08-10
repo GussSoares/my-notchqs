@@ -27,7 +27,6 @@ RowLayout {
                 color: "#7aa2f7"
                 radius: 1.5
 
-                // Trava no fundo do container invisível
                 anchors.bottom: parent.bottom
 
                 SequentialAnimation on height {

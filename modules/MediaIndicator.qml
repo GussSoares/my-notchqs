@@ -3,12 +3,13 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import "../services"
+import "../"
 
 Rectangle {
     id: root
     width: 320
     height: 80
-    color: "#1a1b26"
+    color: Theme.background
     radius: 12
     
     // Esconde o widget se nenhum player estiver aberto
@@ -25,20 +26,18 @@ Rectangle {
             Layout.preferredHeight: 56
             radius: 8
             color: "#24283b"
-            clip: true // Garante que a imagem respeite os cantos arredondados
+            clip: true
 
             Image {
                 anchors.fill: parent
-                // artUrl vem no formato 'file://...' ou 'https://...'
                 source: MprisController.artUrl
                 fillMode: Image.PreserveAspectCrop
                 asynchronous: true
                 
-                // Ícone padrão caso não haja capa
                 Text {
                     anchors.centerIn: parent
                     visible: parent.status !== Image.Ready
-                    text: "󰎈" // Ícone NerdFont
+                    text: "󰎈"
                     color: "#a9b1d6"
                     font.pixelSize: 24
                 }
@@ -55,7 +54,7 @@ Rectangle {
                 color: "#c0caf5"
                 font.bold: true
                 font.pixelSize: 13
-                elide: Text.ElideRight // Adiciona '...' se o texto for muito grande
+                elide: Text.ElideRight
                 Layout.fillWidth: true
             }
 
@@ -75,7 +74,7 @@ Rectangle {
             // Botão Anterior
             Button {
                 flat: true
-                text: "󰒮" // NerdFont
+                text: "󰒮"
                 onClicked: MprisController.previous()
             }
 
@@ -89,7 +88,7 @@ Rectangle {
             // Botão Próximo
             Button {
                 flat: true
-                text: "Draft" // NerdFont ou "󰒞"
+                text: "Draft"
                 onClicked: MprisController.next()
             }
         }

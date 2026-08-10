@@ -4,8 +4,10 @@ import QtQuick
 import Quickshell
 import Quickshell.Services.Mpris
 
-QtObject {
+ShellRoot {
     id: controller
+
+    signal playerDectected(bool isPlaying)
 
     // Seleciona o primeiro player disponível ou o que estiver tocando
     readonly property MprisPlayer activePlayer: Mpris.players.values[0] ?? null

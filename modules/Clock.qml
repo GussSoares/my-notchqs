@@ -9,8 +9,8 @@ Text {
     property string format: "hh:mm"
 
     text: Qt.formatDateTime(clock.date, root.format)
-    color: "#7dcfff"
-    font.pixelSize: 13
+    color: "#c0caf5"
+    font.pixelSize: 14
     font.bold: true
     Layout.alignment: Qt.AlignVCenter
 

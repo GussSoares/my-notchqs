@@ -2,14 +2,41 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import "../"
 
 QtObject {
     id: root
 
     property int cpuUsage: 0
     property int ramUsage: 0
-    property string cpuColor: ''
-    property string ramColor: ''
+    property string cpuColor: {
+        if (cpuUsage < 40)
+            return Theme.success;
+        else if (cpuUsage >= 40 && cpuUsage <= 80)
+            return Theme.accent;
+        else if (cpuUsage > 80)
+            return Theme.error;
+        return Theme.success;
+    }
+    property string ramColor: {
+        if (ramUsage < 40)
+            return Theme.success;
+        else if (ramUsage >= 40 && ramUsage <= 80)
+            return Theme.accent;
+        else if (ramUsage > 80)
+            return Theme.error;
+        return Theme.success;
+    }
+    property string cpuIcon: ''
+    property string ramIcon: {
+        if (ramUsage < 40)
+            return "󰾆 ";
+        else if (ramUsage >= 40 && ramUsage <= 80)
+            return "󰾅 ";
+        else if (ramUsage > 80)
+            return "󰓅 ";
+        return "󰾆 ";
+    }
 
     property int timerInterval: 2500
 

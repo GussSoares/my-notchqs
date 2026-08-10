@@ -5,3 +5,10 @@ singleton BrightnessController 1.0 services/BrightnessController.qml
 singleton BatteryController 1.0 services/BatteryController.qml
 singleton MprisController 1.0 services/MprisController.qml
 singleton NetworkController 1.0 services/NetworkController.qml
+singleton NotificationController 1.0 services/NotificationController.qml
+singleton IpcController 1.0 services/IpcController.qml
+singleton PowerController 1.0 services/PowerController.qml
+singleton UpdatesController 1.0 services/UpdatesController.qml
+
+# Theme
+singleton Theme 1.0 Theme.qml

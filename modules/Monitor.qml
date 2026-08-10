@@ -3,17 +3,21 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import "../services"
+import "../modules"
 
 Item {
     id: root
-    implicitWidth: mainLayout.implicitWidth
+    implicitWidth: mainLayout.implicitWidth + 40
     implicitHeight: mainLayout.implicitHeight
 
     function getColor(value) {
-        if (value < 40) return "#a6da95"
-        else if (value >= 40 && value <= 60) return "#8aadf4"
-        else if (value > 60) return "#ed8796"
-        return "#a6da95"
+        if (value < 40)
+            return "#a6da95";
+        else if (value >= 40 && value <= 60)
+            return "#8aadf4";
+        else if (value > 60)
+            return "#ed8796";
+        return "#a6da95";
     }
 
     MouseArea {
@@ -23,63 +27,70 @@ Item {
     }
 
     RowLayout {
-    id: mainLayout
-    anchors.fill: parent
-    spacing: 12
+        id: mainLayout
+        anchors.centerIn: parent
 
-    
+        RowLayout {
+            spacing: 4
 
-    RowLayout {
-        spacing: 4
-
-        Text {
-            text: " "
-            color: root.getColor(MonitorController.cpuUsage)
-            font.pixelSize: 16
-        }
-
-        Text {
-            text: "CPU " + MonitorController.cpuUsage + "%"
-            color: MonitorController.cpuUsage > 80 ? "#f7768e" : "#c0caf5"
-            font.pixelSize: 12
-            font.bold: true
-
-            Behavior on color { ColorAnimation { duration: 150 } }
-        }
-    }
-
-    Text {
-        text: "|"
-        color: "#565f89"
-        font.pixelSize: 12
-    }
-
-    // Item da RAM
-    RowLayout {
-        spacing: 4
-
-        Text {
-            text: {
-                if (MonitorController.ramUsage < 40) return "󰾆 "
-                else if (MonitorController.ramUsage >= 40 && MonitorController.ramUsage <= 60) return "󰾅 "
-                else if (MonitorController.ramUsage > 60) return "󰓅 "
-                return "󰾆 "
-        // anchors.fill: parent
+            Text {
+                text: " "
+                color: root.getColor(MonitorController.cpuUsage)
+                font.pixelSize: 14
             }
-            color: root.getColor(MonitorController.ramUsage)
-            font.pixelSize: 16
+
+            Text {
+                text: "CPU " + MonitorController.cpuUsage + "%"
+                color: MonitorController.cpuUsage > 80 ? "#f7768e" : "#c0caf5"
+                font.pixelSize: 12
+                font.bold: true
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: 150
+                    }
+                }
+            }
         }
 
-        Text {
-            text: "RAM " + MonitorController.ramUsage + "%"
-            color: MonitorController.ramUsage > 85 ? "#f7768e" : "#c0caf5"
-            font.pixelSize: 12
-            font.bold: true
+        Item {
+            Layout.fillWidth: true
+        }
+        Clock {}
+        Item {
+            Layout.fillWidth: true
+        }
 
-            Behavior on color { ColorAnimation { duration: 150 } }
+        // Item da RAM
+        RowLayout {
+            spacing: 4
+
+            Text {
+                text: {
+                    if (MonitorController.ramUsage < 40)
+                        return "󰾆 ";
+                    else if (MonitorController.ramUsage >= 40 && MonitorController.ramUsage <= 60)
+                        return "󰾅 ";
+                    else if (MonitorController.ramUsage > 60)
+                        return "󰓅 ";
+                    return "󰾆 ";
+                }
+                color: root.getColor(MonitorController.ramUsage)
+                font.pixelSize: 14
+            }
+
+            Text {
+                text: "RAM " + MonitorController.ramUsage + "%"
+                color: MonitorController.ramUsage > 85 ? "#f7768e" : "#c0caf5"
+                font.pixelSize: 12
+                font.bold: true
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: 150
+                    }
+                }
+            }
         }
     }
 }
-
-}
-
