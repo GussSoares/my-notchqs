@@ -85,8 +85,10 @@ Rectangle {
         enabled: notch.focusedScreen
 
         function onBrightnessChanged(value) {
-            NavigationController.navigate(NavigationController.Views.Brightness)
-            restoreTimer.restart();
+            if (activeView !== NavigationController.Views.ControlCenter) {
+                NavigationController.navigate(NavigationController.Views.Brightness)
+                restoreTimer.restart();
+            }
         }
     }
 

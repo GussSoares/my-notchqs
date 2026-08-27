@@ -73,7 +73,7 @@ QtObject {
     }
 
     function setBrightness(value) {
-        let newBright = parseInt(19200 / value * 100)
+        let newBright = parseInt(19200 * value) || 0
         Quickshell.execDetached(['brightnessctl', 'set', newBright])
     }
 
