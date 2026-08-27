@@ -9,6 +9,7 @@ singleton NotificationController 1.0 services/NotificationController.qml
 singleton IpcController 1.0 services/IpcController.qml
 singleton PowerController 1.0 services/PowerController.qml
 singleton UpdatesController 1.0 services/UpdatesController.qml
+singleton NavigationController 1.0 services/NavigationController.qml
 
 # Theme
 singleton Theme 1.0 Theme.qml

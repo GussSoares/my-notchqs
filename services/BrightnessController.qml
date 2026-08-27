@@ -72,6 +72,11 @@ QtObject {
         }
     }
 
+    function setBrightness(value) {
+        let newBright = parseInt(19200 / value * 100)
+        Quickshell.execDetached(['brightnessctl', 'set', newBright])
+    }
+
     // Lifecycle / Trava de Inicialização
     Component.onCompleted: {
         Qt.callLater(() => {

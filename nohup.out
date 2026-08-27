@@ -1,0 +1,10 @@
+[32m  INFO[0m: Launching config: "/home/gustavo/workspace/quickshell/my-notchqs/shell.qml"
+[32m  INFO[0m: Shell ID: "0ccab1a037dcbdaed4c22437ed61800e" Path ID "0ccab1a037dcbdaed4c22437ed61800e"
+[32m  INFO[0m: Saving logs to "/run/user/1000/quickshell/by-id/i8f3hrbckt/log.qslog"
+[33m  WARN[97m quickshell.service.notifications[0m: Could not register notification server at org.freedesktop.Notifications, presumably because one is already registered.
+[33m  WARN[97m quickshell.service.notifications[0m: Registration will be attempted again if the active service is unregistered.
+[32m  INFO[0m: Configuration Loaded
+[33m  WARN[97m qt.qpa.services[0m: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: Connection already associated with an application ID")
+[33m  WARN[97m quickshell.dbus.properties[0m: Error updating property org.mpris.MediaPlayer2.brave.instance9714/org/mpris/MediaPlayer2/org.mpris.MediaPlayer2.Player:Position
+[33m  WARN[97m quickshell.dbus.properties[0m: QDBusError("org.freedesktop.DBus.Error.NoReply", "Remote peer disconnected")
+Gdk-Message: 16:58:25.857: Error reading events from display: Broken pipe

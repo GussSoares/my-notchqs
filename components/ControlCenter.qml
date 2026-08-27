@@ -5,7 +5,7 @@ import "../components/NotchExpanded"
 import "../components/ControlCenter" as ControlCenter
 
 Item {
-    id: root
+    id: controlCenter
 
     implicitWidth: mainLayout.implicitWidth
     implicitHeight: mainLayout.implicitHeight
@@ -25,6 +25,12 @@ Item {
                 height: 24
                 radius: 12
                 color: Theme.border
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: NavigationController.navigate(NavigationController.Views.NotchExpanded)
+                }
 
                 Text {
                     text: ''
@@ -61,6 +67,60 @@ Item {
             spacing: 8
 
             ControlCenter.Update {
+                Layout.fillWidth: true
+            }
+        }
+
+        RowLayout {
+            spacing: 8
+
+            ControlCenter.Volume {
+                Layout.fillWidth: true
+            }
+        }
+
+        RowLayout {
+            spacing: 8
+
+            ControlCenter.Brightness {
+                Layout.fillWidth: true
+            }
+        }
+
+        Separator {}
+
+        
+
+        RowLayout {
+            spacing: 8
+
+            Text {
+                text: 'Notificações'
+                color: Theme.textPrimary
+                font.pixelSize: 14
+            }
+            Item {
+                Layout.fillWidth: true
+            }
+            Text {
+                text: ''
+                color: Theme.textPrimary
+                font.pixelSize: 14
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        NotificationController.clearAll()
+                    }
+                }
+            }
+        }
+
+        RowLayout {
+            spacing: 8
+
+            ControlCenter.NotificationList {
                 Layout.fillWidth: true
             }
         }

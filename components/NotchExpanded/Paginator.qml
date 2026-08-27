@@ -5,8 +5,12 @@ import "../../"
 Item {
     id: root
 
+    enum Pages {
+        NotchExpanded = 1,
+        ControlCenter = 2
+    }
+
     property int page: 1
-    readonly property string pageSelected: Theme.textSecondary
 
     Layout.alignment: Qt.AlignHCenter
     Layout.bottomMargin: 10
@@ -24,6 +28,12 @@ Item {
                 height: 10
                 radius: 5
                 color: index + 1 === page ? Theme.textSecondary : Theme.border
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: NavigationController.navigate(index + 1)
+                }
             }
         }
     }

@@ -114,6 +114,10 @@ QtObject {
     function openWireMixInput() {
         microphoneControlProcess.running = true
     }
+    function setVolume(value): void {
+        if (!controller.sink) return
+        controller.sink.audio.volume = Math.min(1.5, value)
+    }
     function volumeUp(): void {
         if (!controller.sink) return
         

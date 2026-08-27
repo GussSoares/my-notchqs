@@ -16,7 +16,7 @@ Rectangle {
 
     property var focusedScreen
 
-    property string activeView: "clock"
+    property int activeView: NavigationController.Views.Clock
     signal setExpanded(bool value)
 
     width: (mainLoader.item ? mainLoader.item.width : 0)
@@ -35,14 +35,37 @@ Rectangle {
         id: restoreTimer
         interval: 2500
         repeat: false
-        onTriggered: notch.activeView = "default"
+        onTriggered: {
+            if (notch.focusedScreen) {
+                NavigationController.navigate(NavigationController.Views.Clock)
+            } else {
+                NavigationController.navigate(NavigationController.Views.Clock)
+                notch.activeView = NavigationController.Views.Clock
+            }
+        }
     }
 
     Timer {
         id: notificationTimer
         interval: 5000
         repeat: false
-        onTriggered: notch.activeView = "default"
+        onTriggered: {
+            if (notch.focusedScreen) {
+                NavigationController.navigate(NavigationController.Views.Clock)
+            } else {
+                NavigationController.navigate(NavigationController.Views.Clock)
+                notch.activeView = NavigationController.Views.Clock
+            }
+        }
+    }
+
+    Connections {
+        target: NavigationController
+        enabled: notch.focusedScreen
+
+        function onCurrentViewChanged() {
+            notch.activeView = NavigationController.currentView
+        }
     }
 
     Connections {
@@ -50,8 +73,10 @@ Rectangle {
         enabled: notch.focusedScreen
 
         function onAudioVolumeTriggered() {
-            notch.activeView = "volume";
-            restoreTimer.restart();
+            if (activeView !== NavigationController.Views.ControlCenter) {
+                NavigationController.navigate(NavigationController.Views.Volume)
+                restoreTimer.restart();
+            }
         }
     }
 
@@ -60,7 +85,7 @@ Rectangle {
         enabled: notch.focusedScreen
 
         function onBrightnessChanged(value) {
-            notch.activeView = "brightness";
+            NavigationController.navigate(NavigationController.Views.Brightness)
             restoreTimer.restart();
         }
     }
@@ -70,7 +95,7 @@ Rectangle {
         enabled: notch.focusedScreen
 
         function onNewNotification(value) {
-            notch.activeView = "notification";
+            NavigationController.navigate(NavigationController.Views.Notification)
             notificationTimer.restart();
         }
     }
@@ -80,11 +105,11 @@ Rectangle {
         enabled: notch.focusedScreen
 
         function onTriggerNotchExpanded(value) {
-            notch.activeView = "controlCenter";
+            NavigationController.navigate(NavigationController.Views.ControlCenter)
             restoreTimer.restart();
         }
         function onTriggerPowerMenu(value) {
-            notch.activeView = "powerMenu";
+            NavigationController.navigate(NavigationController.Views.PowerMenu)
         }
     }
 
@@ -94,7 +119,7 @@ Rectangle {
 
         function onIsPlayingChanged() {
             if (MprisController.isPlaying) {
-                notch.activeView = "musicNotification";
+                NavigationController.navigate(NavigationController.Views.Music)
                 restoreTimer.restart();
             }
         }
@@ -109,23 +134,23 @@ Rectangle {
 
         sourceComponent: {
             switch (notch.activeView) {
-            case "clock":
+            case NavigationController.Views.Clock:
                 return clockComponent;
-            case "volume":
+            case NavigationController.Views.Volume:
                 return volumeComponent;
-            case "monitor":
+            case NavigationController.Views.Monitor:
                 return monitorComponent;
-            case "brightness":
+            case NavigationController.Views.Brightness:
                 return brightnessComponent;
-            case "notification":
+            case NavigationController.Views.Notification:
                 return notificationComponent;
-            case "expandedNotch":
+            case NavigationController.Views.NotchExpanded:
                 return expandedComponent;
-            case "powerMenu":
+            case NavigationController.Views.PowerMenu:
                 return powerMenuComponent;
-            case "musicNotification":
+            case NavigationController.Views.Music:
                 return musicNotificationComponent;
-            case "controlCenter":
+            case NavigationController.Views.ControlCenter:
                 return controlCenterComponent;
             default:
                 return clockComponent;
@@ -137,23 +162,23 @@ Rectangle {
             hoverEnabled: true
             onWheel: wheel => {
                 if (wheel.angleDelta.y > 0) {
-                    notch.activeView = "expandedNotch";
+                    NavigationController.navigate(NavigationController.Views.NotchExpanded)
                 } else if (wheel.angleDelta.y < 0) {
-                    notch.activeView = "controlCenter";
+                    NavigationController.navigate(NavigationController.Views.ControlCenter)
                 }
             }
 
             onEntered: {
-                notch.activeView = 'expandedNotch'
+                NavigationController.navigate(NavigationController.Views.NotchExpanded)
             }
             onExited: {
-                notch.activeView = 'clock'
+                NavigationController.navigate(NavigationController.Views.Clock)
             }
         }
 
         MouseArea {
             anchors.fill: parent
-            onClicked: notch.activeView = "controlCenter";
+            onClicked: NavigationController.navigate(NavigationController.Views.ControlCenter)
         }
     }
 

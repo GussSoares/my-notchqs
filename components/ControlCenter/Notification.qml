@@ -1,61 +1,72 @@
 import QtQuick
 import QtQuick.Layouts
-import "../services"
+import "../../"
+import "../../services"
 
-Item {
-    implicitWidth: Math.min(mainLayout.implicitWidth, maxWidth)
-    implicitHeight: mainLayout.implicitHeight
+Rectangle {
 
-    readonly property var notif: NotificationController.lastNotification
+    property var notif
 
     readonly property string icon: notif ? (notif.image || "") : ""
     readonly property string summary: notif ? (notif.summary || "") : ""
     readonly property string body: notif ? (notif.body || "") : ""
 
-    readonly property int maxWidth: 300
+    color: Theme.surface
+    width: ListView.view ? ListView.view.width : 0
+    height: 50
+    radius: 13
 
     MouseArea {
         anchors.fill: parent
-        hoverEnabled: true
-        onClicked: NotificationController.launchFromNotification(NotificationController.lastNotification)
-        HoverHandler {
-            blocking: true
+        cursorShape: Qt.PointingHandCursor
+
+        onClicked: {
+            NotificationController.launch(notif)
         }
     }
 
     RowLayout {
-        id: mainLayout
-        anchors.centerIn: parent
+        id: cpuLayout
         spacing: 8
-        width: Math.min(mainLayout.implicitWidth, maxWidth)
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 10
+        anchors.topMargin: 10
+        anchors.rightMargin: 10
+        anchors.bottomMargin: 10
 
         Image {
-            source: icon
+            source: icon ? icon : ''
+            asynchronous: true
             Layout.preferredWidth: 32
             Layout.preferredHeight: 32
             Layout.alignment: Qt.AlignCenter
             fillMode: Image.PreserveAspectFit
 
+            cache: true
+
             Rectangle {
                 anchors.fill: parent
-                color: "#24283b"
+                color: Theme.textSecondary
                 radius: 16
                 visible: parent.status !== Image.Ready
                 Text {
                     anchors.centerIn: parent
                     text: "󰂚"
-                    color: "#7aa2f7"
+                    color: Theme.accent
                 }
             }
         }
 
         ColumnLayout {
-            spacing: 3
+            spacing: 0
 
             Text {
                 text: summary
-                color: "#c0caf5"
-                font.pixelSize: 14
+                color: Theme.textPrimary
+                font.pixelSize: 12
                 font.bold: true
 
                 Layout.fillWidth: true
@@ -64,8 +75,8 @@ Item {
 
             Text {
                 text: body
-                color: "#c0caf5"
-                font.pixelSize: 11
+                color: Theme.textPrimary
+                font.pixelSize: 10
 
                 Layout.fillWidth: true
                 elide: Text.ElideRight
