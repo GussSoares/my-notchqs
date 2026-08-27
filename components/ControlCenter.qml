@@ -47,6 +47,28 @@ Item {
                 color: Theme.textPrimary
                 font.bold: true
             }
+
+            Item {Layout.fillWidth: true}
+
+            Rectangle {
+                width: 24
+                height: 24
+                radius: 12
+                color: Theme.border
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: NavigationController.navigate(NavigationController.Views.PowerMenu)
+                }
+
+                Text {
+                    text: '⏻'
+                    anchors.centerIn: parent
+                    color: Theme.textPrimary
+                    font.pixelSize: 12
+                }
+            }
         }
 
         RowLayout {
