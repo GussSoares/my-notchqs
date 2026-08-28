@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 import "../../services"
 import "../../"
 
@@ -14,7 +15,8 @@ Item {
         clip: true
         visible: listView.count !== 0
 
-        model: NotificationController.activeNotifications.slice(0, 10)
+        model: NotificationController.notifications
+        // model: [{icon: 'discord', summary: 'test', body: 'test'}]
 
         delegate: Notification {
             required property var modelData

@@ -16,15 +16,21 @@ QtObject {
     signal newNotification(var notification)
 
     property NotificationServer server: NotificationServer {
-        id: notifServer
+        actionsSupported: true
 
         onNotification: (notification) => {
             if (!notification) return;
 
+            notification.tracked = true; 
             let exists = activeNotifications.some(n => n.id === notification.id)
             if (exists) return;
 
-            let notifData = Object.assign({}, notification, { rawNotification: notification });
+            let notifData = {
+                id: notification.id,
+                image: notification.image,
+                body: notification.body,
+                summary: notification.summary
+            }
 
             let list = [notifData, ...controller.activeNotifications]
             controller.activeNotifications = list
@@ -52,15 +58,13 @@ QtObject {
     }
 
     function dismiss(notification) {
-        if (!notification) return
+        if (!notification) return;
         
-        // Se passarem o objeto JS customizado, pega a notificação nativa interna
-        let raw = notification.rawNotification ? notification.rawNotification : notification
-
-        removeNotification(raw)
+        let notifId = typeof notification === "object" ? notification.id : notification;
+        removeNotification(notifId);
         
-        if (raw && typeof raw.dismiss === "function") {
-            raw.dismiss()
+        if (notification && typeof notification.dismiss === "function") {
+            notification.dismiss();
         }
     }
 
@@ -98,56 +102,11 @@ QtObject {
         }
     }
 
-    function launch(notification) {
-        if (!notification) return
+    function launch(notificationId) {
+        let notification = server.trackedNotifications.values.find(n => n.id === notificationId)
+        if (!notification) return;
 
-        let raw = notification.rawNotification ? notification.rawNotification : notification
-        
-        // 1. Diz ao aplicativo de origem para abrir o chat correspondente
-        if (raw && typeof raw.activateAction === "function") {
-            raw.activateAction("default")
-        }
-
-        let appQuery = (notification.desktopEntry !== "" ? notification.desktopEntry : notification.appName).toLowerCase()
-
-        // 2. Cria um processo rápido para ler as janelas ativas do Hyprland em formato JSON
-        let clientProc = cmdRunner.createObject(controller, { command: ["hyprctl", "clients", "-j"] });
-        clientProc.running = true;
-
-        // Aguarda a resposta do terminal
-        // let targetClient = null;
-        // let output = clientProc.readAllString(); // Captura o JSON gerado pelo hyprctl
-        // clientProc.destroy();
-
-        // if (output && output.trim() !== "") {
-        //     try {
-        //         let clientsList = JSON.parse(output);
-                
-        //         // Varre a lista real de janelas devolvida pelo compositor
-        //         for (let i = 0; i < clientsList.length; i++) {
-        //             let client = clientsList[i];
-        //             let clientClass = (client.initialClass || client.class || "").toLowerCase();
-                    
-        //             if (clientClass.includes(appQuery) || appQuery.includes(clientClass)) {
-        //                 targetClient = client;
-        //                 break;
-        //             }
-        //         }
-        //     } catch (e) {
-        //         console.log("Erro ao processar JSON de clientes do Hyprland:", e);
-        //     }
-        // }
-
-        // // 3. Se encontramos a janela aberta, focamos usando o endereço
-        // if (targetClient && targetClient.address) {
-        //     Hyprland.dispatch(`hl.dsp.focus({ window = "address:${targetClient.address}" })`)
-        // } else {
-        //     // 4. Se o app não estava aberto, inicia ele do zero
-        //     launchFromNotification(notification)
-        // }
-
-        // // 5. Descarta a notificação visualmente após o clique
-        // dismiss(notification)
+        notification.actions[0].invoke()
     }
 
     function runProcess(cmdList: var): void {
@@ -170,8 +129,8 @@ QtObject {
             stdout: StdioCollector {
                 onStreamFinished: (text, data) => {
                     // console.log(Quickshell.execDetached(["hyprctl", "clients", "-j"]))
-                    console.log(this.data)
-                    console.log(this.data[0].class)
+                    // console.log(this.data)
+                    // console.log(this.data[0].class)
                     // try {
                     //     // Converte o texto recebido em um objeto JavaScript
                     //     let clients = JSON.parse(text);

@@ -21,7 +21,7 @@ Rectangle {
         cursorShape: Qt.PointingHandCursor
 
         onClicked: {
-            NotificationController.launch(notif)
+            NotificationController.launch(notif.id)
         }
     }
 

@@ -49,6 +49,7 @@ Item {
         Slider {
             id: brightnessSlider
             hoverEnabled: false
+            enabled: !!brightnessView.controller.brightness
 
             MouseArea {
                 anchors.fill: parent
