@@ -9,6 +9,7 @@ QtObject {
 
     signal triggerNotchExpanded()
     signal triggerPowerMenu()
+    signal triggerThemeSelector()
 
     property IpcHandler handleNotch: IpcHandler {
         target: "notch"
@@ -22,6 +23,14 @@ QtObject {
 
         function menu(): void {
             ipcManager.triggerPowerMenu()
+        }
+    }
+
+    property IpcHandler handleThemeSelector: IpcHandler {
+        target: "themeSelector"
+
+        function menu(): void {
+            ipcManager.triggerThemeSelector()
         }
     }
 }

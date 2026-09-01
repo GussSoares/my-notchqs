@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import "../services"
+import "../"
 
 RowLayout {
     id: root
@@ -27,9 +28,9 @@ RowLayout {
             return "󰁹"
         }
         color: {
-            if (BatteryController.isCharging) return "#9ece6a" // Verde
-            if (BatteryController.chargePercentage <= 0.15) return "#f7768e" // Vermelho crítico
-            return "#c0caf5"
+            if (BatteryController.isCharging) return Theme.success // Verde
+            if (BatteryController.chargePercentage <= 0.15) return Theme.error // Vermelho crítico
+            return Theme.textPrimary
         }
         font.pixelSize: 16
     }
@@ -37,7 +38,7 @@ RowLayout {
     // Texto da porcentagem
     Text {
         text: Math.round(BatteryController.chargePercentage * 100) + "%"
-        color: "#c0caf5"
+        color: Theme.textPrimary
         font.pixelSize: 12
         font.bold: true
     }

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import "../../modules"
+import "../../"
 
 Item {
     id: root
@@ -36,7 +37,7 @@ Item {
             Clock {
                 format: "MMMM dd, yyyy"
                 font.pixelSize: 11
-                color: "#c0caf5"
+                color: Theme.textPrimary
                 Layout.alignment: Qt.AlignHCenter
             }
         }

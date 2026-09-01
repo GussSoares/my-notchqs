@@ -1,10 +1,11 @@
 import QtQuick
 import QtQuick.Layouts
+import "../"
 
 Rectangle {
     id: root
 
-    color: "#c0caf5" 
+    color: Theme.textPrimary 
 
     Layout.fillWidth: true 
     Layout.preferredHeight: 1 

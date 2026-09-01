@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Services.Pipewire
 import Quickshell.Io
 import "../services"
+import "../"
 
 Item {
     id: root
@@ -16,13 +17,13 @@ Item {
     function getVolumeColor() {
         if (VolumeController.lastAudioMuted) {
             // muted
-            return "#565f89";
+            return Theme.textSecondary;
         } else if (Math.round(VolumeController.lastAudioVolume * 100) > 100) {
             // volume > 100
-            return "#ed8796";
+            return Theme.error;
         } else {
             // volume > 0 and volume < 100
-            return "#7aa2f7";
+            return Theme.accent;
         }
     }
 
@@ -48,7 +49,7 @@ Item {
                     return " ";
                 return "  ";
             }
-            color: (VolumeController.lastAudioMuted) ? "#f7768e" : "#c0caf5"
+            color: (VolumeController.lastAudioMuted) ? Theme.error : Theme.textPrimary
             font.pixelSize: 14
         }
 
@@ -71,7 +72,7 @@ Item {
                 width: volumeSlider.availableWidth
                 height: implicitHeight
                 radius: 2
-                color: "#414868"
+                color: Theme.border
                 clip: true
 
                 Rectangle {
@@ -99,7 +100,7 @@ Item {
 
         Text {
             text: VolumeController.lastAudioVolume ? root.getVolumePercentage() + "%" : "0%"
-            color: "#c0caf5"
+            color: Theme.textPrimary
             font.pixelSize: 11
             font.bold: true
             Layout.preferredWidth: 35

@@ -12,6 +12,14 @@ Item {
 
     clip: true
 
+    HoverHandler {
+        onHoveredChanged: {
+            if (!hovered) {
+                NavigationController.navigate(NavigationController.Views.Clock)
+            }
+        }
+    }
+
     ColumnLayout {
         id: mainLayout
         anchors.centerIn: parent

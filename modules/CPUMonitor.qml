@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Io
 import "../services"
 import "../modules"
+import "../"
 
 Item {
     id: root
@@ -12,12 +13,12 @@ Item {
 
     function getColor(value) {
         if (value < 40)
-            return "#a6da95";
+            return Theme.success;
         else if (value >= 40 && value <= 60)
-            return "#8aadf4";
+            return Theme.accent;
         else if (value > 60)
-            return "#ed8796";
-        return "#a6da95";
+            return Theme.error;
+        return Theme.success;
     }
 
     MouseArea {
@@ -38,7 +39,7 @@ Item {
 
         Text {
             text: "CPU " + MonitorController.cpuUsage + "%"
-            color: MonitorController.cpuUsage > 80 ? "#f7768e" : "#c0caf5"
+            color: MonitorController.cpuUsage > 80 ? Theme.error : Theme.textPrimary
             font.pixelSize: 12
             font.bold: true
 

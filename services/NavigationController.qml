@@ -14,7 +14,13 @@ QtObject {
         Brightness,
         Notification,
         Music,
-        PowerMenu
+        PowerMenu,
+        ThemeSelector
+    }
+
+    enum IpcViews {
+        PowerMenu=8,
+        ThemeSelector=9
     }
 
     property int currentView: 0

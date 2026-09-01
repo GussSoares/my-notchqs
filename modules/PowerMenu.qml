@@ -2,6 +2,7 @@ import Quickshell
 import QtQuick
 import QtQuick.Layouts
 import "../services"
+import "../"
 
 Item {
     id: root
@@ -9,14 +10,21 @@ Item {
     implicitWidth: 500
     implicitHeight: 80
 
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        // onEntered: NavigationController.navigate(NavigationController.Views.PowerMenu)
+        onExited: NavigationController.navigate(NavigationController.Views.Clock)
+    }
+
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: 5
-        anchors.rightMargin: 5
+        anchors.leftMargin: 12
+        anchors.rightMargin: 12
         spacing: 10
 
         Rectangle {
-            color: '#24283b'
+            color: Theme.surface
             Layout.fillWidth: true
             height: 65
             radius: 16
@@ -33,14 +41,14 @@ Item {
 
                 Text {
                     text: ' '
-                    color: 'white'
+                    color: Theme.textPrimary
                     Layout.alignment: Qt.AlignHCenter
                 }
             }
         }
 
         Rectangle {
-            color: '#24283b'
+            color: Theme.surface
             Layout.fillWidth: true
             height: 65
             radius: 16
@@ -57,14 +65,14 @@ Item {
 
                 Text {
                     text: ' '
-                    color: 'white'
+                    color: Theme.textPrimary
                     Layout.alignment: Qt.AlignHCenter
                 }
             }
         }
 
         Rectangle {
-            color: '#24283b'
+            color: Theme.surface
             Layout.fillWidth: true
             height: 65
             radius: 16
@@ -81,14 +89,14 @@ Item {
 
                 Text {
                     text: '󰏤 '
-                    color: 'white'
+                    color: Theme.textPrimary
                     Layout.alignment: Qt.AlignHCenter
                 }
             }
         }
 
         Rectangle {
-            color: '#24283b'
+            color: Theme.surface
             Layout.fillWidth: true
             height: 65
             radius: 16
@@ -105,13 +113,13 @@ Item {
 
                 Text {
                     text: '󰑓 '
-                    color: 'white'
+                    color: Theme.textPrimary
                     Layout.alignment: Qt.AlignHCenter
                 }
             }
         }
         Rectangle {
-            color: '#24283b'
+            color: Theme.surface
             Layout.fillWidth: true
             height: 65
             radius: 16
@@ -128,7 +136,7 @@ Item {
 
                 Text {
                     text: '󰍃 '
-                    color: 'white'
+                    color: Theme.textPrimary
                     Layout.alignment: Qt.AlignHCenter
                 }
             }

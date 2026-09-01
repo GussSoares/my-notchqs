@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import "../services"
+import "../"
 
 Item {
     implicitWidth: Math.min(mainLayout.implicitWidth, maxWidth)
@@ -17,7 +18,11 @@ Item {
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
-        onClicked: NotificationController.launchFromNotification(NotificationController.lastNotification)
+        onClicked: {
+            NotificationController.launch(NotificationController.lastNotification.id)
+            NavigationController.navigate(NavigationController.Views.Clock)
+        }
+
         HoverHandler {
             blocking: true
         }
@@ -38,13 +43,13 @@ Item {
 
             Rectangle {
                 anchors.fill: parent
-                color: "#24283b"
+                color: Theme.background
                 radius: 16
                 visible: parent.status !== Image.Ready
                 Text {
                     anchors.centerIn: parent
                     text: "󰂚"
-                    color: "#7aa2f7"
+                    color: Theme.accent
                 }
             }
         }
@@ -54,7 +59,7 @@ Item {
 
             Text {
                 text: summary
-                color: "#c0caf5"
+                color: Theme.textPrimary
                 font.pixelSize: 14
                 font.bold: true
 
@@ -64,7 +69,7 @@ Item {
 
             Text {
                 text: body
-                color: "#c0caf5"
+                color: Theme.textPrimary
                 font.pixelSize: 11
 
                 Layout.fillWidth: true

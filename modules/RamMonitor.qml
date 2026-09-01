@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Io
 import "../services"
 import "../modules"
+import "../"
 
 Item {
     id: root
@@ -12,12 +13,12 @@ Item {
 
     function getColor(value) {
         if (value < 40)
-            return "#a6da95";
+            return Theme.success;
         else if (value >= 40 && value <= 60)
-            return "#8aadf4";
+            return Theme.accent;
         else if (value > 60)
-            return "#ed8796";
-        return "#a6da95";
+            return Theme.error;
+        return Theme.success;
     }
 
     MouseArea {
@@ -46,7 +47,7 @@ Item {
 
         Text {
             text: "RAM " + MonitorController.ramUsage + "%"
-            color: MonitorController.ramUsage > 85 ? "#f7768e" : "#c0caf5"
+            color: MonitorController.ramUsage > 85 ? Theme.error : Theme.textPrimary
             font.pixelSize: 12
             font.bold: true
 

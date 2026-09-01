@@ -9,6 +9,7 @@ import "../modules"
 import "../services"
 
 import "../components/Notch" as Notch
+import "../components/ThemeSelector" as ThemeSelect
 import "../"
 
 Rectangle {
@@ -26,7 +27,7 @@ Rectangle {
 
     Behavior on width {
         NumberAnimation {
-            duration: 200
+            duration: 250
             easing.type: Easing.OutCubic
         }
     }
@@ -113,6 +114,9 @@ Rectangle {
         function onTriggerPowerMenu(value) {
             NavigationController.navigate(NavigationController.Views.PowerMenu)
         }
+        function onTriggerThemeSelector(value) {
+            NavigationController.navigate(NavigationController.Views.ThemeSelector)
+        }
     }
 
     Connections {
@@ -154,6 +158,8 @@ Rectangle {
                 return musicNotificationComponent;
             case NavigationController.Views.ControlCenter:
                 return controlCenterComponent;
+            case NavigationController.Views.ThemeSelector:
+                return themeSelectorComponent;
             default:
                 return clockComponent;
             }
@@ -161,7 +167,7 @@ Rectangle {
 
         MouseArea {
             anchors.fill: parent
-            hoverEnabled: true
+            hoverEnabled: notch.activeView === NavigationController.Views.Clock || notch.activeView === NavigationController.Views.NotchExpanded
             onWheel: wheel => {
                 if (wheel.angleDelta.y > 0) {
                     NavigationController.navigate(NavigationController.Views.NotchExpanded)
@@ -171,16 +177,15 @@ Rectangle {
             }
 
             onEntered: {
-                NavigationController.navigate(NavigationController.Views.NotchExpanded)
+                if (notch.activeView === NavigationController.Views.Clock) {
+                    NavigationController.navigate(NavigationController.Views.NotchExpanded)
+                }
             }
             onExited: {
-                NavigationController.navigate(NavigationController.Views.Clock)
+                if (notch.activeView === NavigationController.Views.NotchExpanded) {
+                    NavigationController.navigate(NavigationController.Views.Clock)
+                }
             }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: NavigationController.navigate(NavigationController.Views.ControlCenter)
         }
     }
 
@@ -194,7 +199,7 @@ Rectangle {
             opacity: 0
             Behavior on opacity {
                 NumberAnimation {
-                    duration: 200
+                    duration: 250
                     easing.type: Easing.OutCubic
                 }
             }
@@ -210,7 +215,7 @@ Rectangle {
             opacity: 0
             Behavior on opacity {
                 NumberAnimation {
-                    duration: 200
+                    duration: 250
                     easing.type: Easing.OutCubic
                 }
             }
@@ -226,7 +231,7 @@ Rectangle {
             opacity: 0
             Behavior on opacity {
                 NumberAnimation {
-                    duration: 200
+                    duration: 250
                     easing.type: Easing.OutCubic
                 }
             }
@@ -242,7 +247,7 @@ Rectangle {
             opacity: 0
             Behavior on opacity {
                 NumberAnimation {
-                    duration: 200
+                    duration: 250
                     easing.type: Easing.OutCubic
                 }
             }
@@ -257,7 +262,7 @@ Rectangle {
             opacity: 0
             Behavior on opacity {
                 NumberAnimation {
-                    duration: 200
+                    duration: 250
                     easing.type: Easing.OutCubic
                 }
             }
@@ -272,7 +277,7 @@ Rectangle {
             opacity: 0
             Behavior on opacity {
                 NumberAnimation {
-                    duration: 200
+                    duration: 250
                     easing.type: Easing.OutCubic
                 }
             }
@@ -287,7 +292,7 @@ Rectangle {
             opacity: 0
             Behavior on opacity {
                 NumberAnimation {
-                    duration: 200
+                    duration: 250
                     easing.type: Easing.OutCubic
                 }
             }
@@ -302,7 +307,7 @@ Rectangle {
             opacity: 0
             Behavior on opacity {
                 NumberAnimation {
-                    duration: 200
+                    duration: 250
                     easing.type: Easing.OutCubic
                 }
             }
@@ -317,7 +322,22 @@ Rectangle {
             opacity: 0
             Behavior on opacity {
                 NumberAnimation {
-                    duration: 200
+                    duration: 250
+                    easing.type: Easing.OutCubic
+                }
+            }
+            Component.onCompleted: opacity = 1
+        }
+    }
+
+    Component {
+        id: themeSelectorComponent
+
+        ThemeSelect.ThemeSelector {
+            opacity: 0
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 250
                     easing.type: Easing.OutCubic
                 }
             }

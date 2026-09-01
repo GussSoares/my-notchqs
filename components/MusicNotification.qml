@@ -3,6 +3,7 @@ import Qt5Compat.GraphicalEffects
 import QtQuick.Layouts
 import Quickshell
 import "../services"
+import "../"
 
 Item {
     id: root
@@ -36,14 +37,14 @@ Item {
 
             Rectangle {
                 anchors.fill: parent
-                color: "#24283b"
+                color: Theme.background
                 radius: 16
                 visible: albumArt.status !== Image.Ready
 
                 Text {
                     anchors.centerIn: parent
                     text: "󰎈"
-                    color: "#c0caf5"
+                    color: Theme.textPrimary
                     font.pixelSize: 14
                 }
             }
@@ -56,7 +57,7 @@ Item {
             Text {
                 id: slidingText
                 text: MprisController.trackTitle
-                color: '#c0caf5'
+                color: Theme.textPrimary
                 font.pixelSize: 14
                 x: 0
 

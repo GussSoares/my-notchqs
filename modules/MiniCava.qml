@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import "../services"
+import "../"
 
 RowLayout {
     id: root
@@ -24,7 +25,7 @@ RowLayout {
                 id: bar
                 width: parent.width
                 height: 3
-                color: "#7aa2f7"
+                color: Theme.accent
                 radius: 1.5
 
                 anchors.bottom: parent.bottom
